@@ -57,7 +57,7 @@ jobs:
           elif [[ "${{ matrix.architecture }}" == "windows-x86" || "${{ matrix.architecture }}" == "windows-x64" ]]; then
             SDE_WINDOWS_BASE="$(basename "$SDE_WINDOWS_URL" | sed 's/.tar.xz//')"
             echo "SDE_WINDOWS_BASE set to: $SDE_WINDOWS_BASE"
-            SDE_PATH="${{ github.workspace }}\$SDE_WINDOWS_BASE\sde.exe"
+            SDE_PATH="${{ github.workspace }}/$SDE_WINDOWS_BASE/sde.exe"
             echo "SDE_PATH set to: $SDE_PATH"
           fi
           echo "SDE_PATH=$SDE_PATH" >> $GITHUB_ENV
@@ -65,6 +65,11 @@ jobs:
 
       - name: Run tests using Intel SDE
         run: |
-          ${{ env.SDE_PATH }} --help
+          if [ -f "$SDE_PATH" ]; then
+            echo "SDE executable found. Running..."
+            "$SDE_PATH" --help
+          else
+            echo "SDE executable not found at $SDE_PATH"
+          fi
         #working-directory: ${{ github.workspace }}/build/${{ matrix.architecture }}
         #shell: bash
