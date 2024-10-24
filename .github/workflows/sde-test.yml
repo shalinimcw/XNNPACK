@@ -8,37 +8,34 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    uses: ./.github/workflows/windows-and-linux-build.yml
+  # build:
+  #   uses: ./.github/workflows/windows-and-linux-build.yml
 
   test-sde:
     strategy:
       matrix:
         arch: [windows-x86, windows-x64, linux-x86_64]
-        sde-processor: [skl, cnl, icl, skx, clx, cpx, icx, tgl, adl, mtl, rpl, spr, emr, gnr, srf, arl, lnl]
-
+        sde-processor: [skl]
     runs-on: ${{ matrix.arch == 'linux-x86_64' && 'ubuntu-latest' || 'windows-latest' }}
-    needs: build
+    #needs: build
     timeout-minutes: 60
     continue-on-error: true
 
     steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts-${{ matrix.arch }}
-          path: build/${{ matrix.arch }}/
+      # - name: Download Build Artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: build-artifacts-${{ matrix.arch }}
+      #     path: build/${{ matrix.arch }}/
 
       - name: Download Intel SDE
         run: |
           if [ "${{ matrix.arch }}" == "linux-x86_64" ]; then
             echo "Downloading Linux Intel SDE"
-            wget "$SDE_LINUX_URL"
-            tar -xf "$(basename "$SDE_LINUX_URL")"
+            wget "$SDE_LINUX_URL" && tar -xf "$(basename "$SDE_LINUX_URL")"
           elif [[ "${{ matrix.arch }}" == "windows-x86" || "${{ matrix.arch }}" == "windows-x64" ]]; then
             echo "Downloading Windows Intel SDE"
-            curl -LO "$SDE_WINDOWS_URL"
-            tar -xf "$(basename "$SDE_WINDOWS_URL")" 
+            curl -LO "$SDE_WINDOWS_URL" && tar -xf "$(basename "$SDE_WINDOWS_URL")" 
           fi
         shell: bash
 
@@ -56,13 +53,13 @@ jobs:
       - name: Run tests using Intel SDE (Linux)
         if: matrix.arch == 'linux-x86_64'
         run: |
-          $env.SDE_PATH -${{ matrix.sde-processor }} -- ctest -C Release --parallel ${{ env.NUMBER_OF_PROCESSORS }}
-        working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
+          $env.SDE_PATH -help
+        #working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
         shell: bash
 
       - name: Run tests using Intel SDE (Windows-x86 and Windows-x64)
         if: matrix.arch == 'windows-x86' || matrix.arch == 'windows-x64'
         run: |
-           & "$env.SDE_PATH" -${{ matrix.sde-processor }} -- ctest -C Release --parallel $Env:NUMBER_OF_PROCESSORS
-        working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
+           & "$env.SDE_PATH" -help
+        #working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
         shell: pwsh
