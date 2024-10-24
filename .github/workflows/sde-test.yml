@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         architecture: [windows-x86, windows-x64, linux-x86_64]
-        sde-processor: [skl, cnl, icl, skx, clx, cpx, icx, tgl, adl, mtl, rpl, spr, emr, gnr, srf, arl, lnl]
+        sde-processor: [skl]
 
     runs-on: ${{ matrix.architecture == 'linux-x86_64' && 'ubuntu-latest' || 'windows-latest' }}
     #needs: build
@@ -61,5 +61,5 @@ jobs:
       - name: Run tests using Intel SDE
         run: |
           ${{ env.SDE_PATH }} --help
-        working-directory: ${{ github.workspace }}/build/${{ matrix.architecture }}
+        #working-directory: ${{ github.workspace }}/build/${{ matrix.architecture }}
         shell: bash
