@@ -65,6 +65,6 @@ jobs:
 
       - name: Run tests using Intel SDE
         run: |
-          "${{ env.SDE_PATH }}"
+          "${{ env.SDE_PATH }}" -help
         #working-directory: ${{ github.workspace }}/build/${{ matrix.architecture }}
         #shell: bash
