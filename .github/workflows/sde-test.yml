@@ -39,6 +39,7 @@ jobs:
             echo "Downloading Windows Intel SDE"
             curl -LO "$SDE_WINDOWS_URL"
             tar -xf "$(basename "$SDE_WINDOWS_URL")" 
+            ls -la "$(basename "$SDE_WINDOWS_URL")"
           fi
         shell: bash
 
