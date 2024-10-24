@@ -39,7 +39,6 @@ jobs:
             echo "Downloading Windows Intel SDE"
             curl -LO "$SDE_WINDOWS_URL"
             tar -xf "$(basename "$SDE_WINDOWS_URL")" 
-            ls -la "$(basename "$SDE_WINDOWS_URL")"
           fi
         shell: bash
 
@@ -48,6 +47,8 @@ jobs:
         run: |
           pwd
           ls -lah
+      - name: List files in sde-external-9.44.0-2024-08-22-win
+        run: dir "$(basename "$SDE_WINDOWS_URL")" 
 
       - name: Set SDE PATH
         run: |
