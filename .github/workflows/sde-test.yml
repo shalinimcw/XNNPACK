@@ -65,11 +65,6 @@ jobs:
 
       - name: Run tests using Intel SDE
         run: |
-          if [ -f "$SDE_PATH" ]; then
-            echo "SDE executable found. Running..."
-            "$SDE_PATH" --help
-          else
-            echo "SDE executable not found at $SDE_PATH"
-          fi
+          $SDE_PATH --help
         #working-directory: ${{ github.workspace }}/build/${{ matrix.architecture }}
         #shell: bash
