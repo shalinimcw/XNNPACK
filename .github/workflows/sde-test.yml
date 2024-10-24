@@ -22,11 +22,25 @@ jobs:
     continue-on-error: true
 
     steps:
+      - name: Set Build Path
+        id: set-build-path
+        run: |
+          if [ "${{ matrix.arch }}" == "linux-x86_64" ]; then
+            echo "BUILD_PATH=build/local" >> $GITHUB_ENV
+          elif [ "${{ matrix.arch }}" == "windows-x64" ]; then
+            echo "BUILD_PATH=build/windows/x64" >> $GITHUB_ENV
+          elif [ "${{ matrix.arch }}" == "windows-x86" ]; then
+            echo "BUILD_PATH=build/windows/x86" >> $GITHUB_ENV
+          else
+            echo "Unknown architecture: ${matrix.arch}"
+            exit 1
+          fi
+
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts-${{ matrix.arch }}
-          path: build/${{ matrix.arch }}/
+          path: ${{ env.BUILD_PATH }}
 
       - name: Download Intel SDE
         run: |
@@ -53,8 +67,8 @@ jobs:
       - name: Run tests using Intel SDE (Linux)
         if: matrix.arch == 'linux-x86_64'
         run: |
-          "${{ env.SDE_PATH }}" -${{ matrix.sde-processor }} -- ctest -C Release --test-dir ${{ github.workspace }}/build/${{ matrix.arch }} --parallel ${{ env.NUMBER_OF_PROCESSORS }}
-        #working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
+          "${{ env.SDE_PATH }}" -${{ matrix.sde-processor }} -- ctest -C Release --parallel $(nproc)
+        working-directory: ${{ env.BUILD_PATH }}
         shell: bash
 
       # - name: Run tests using Intel SDE (Windows-x86 and Windows-x64)
