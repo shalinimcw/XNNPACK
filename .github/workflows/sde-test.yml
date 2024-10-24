@@ -60,6 +60,6 @@ jobs:
       - name: Run tests using Intel SDE (Windows-x86 and Windows-x64)
         if: matrix.arch == 'windows-x86' || matrix.arch == 'windows-x64'
         run: |
-          $SDE_PATH -help
+          & "$env.SDE_PATH" -help
         #working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
         shell: pwsh
