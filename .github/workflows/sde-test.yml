@@ -43,11 +43,10 @@ jobs:
         run: |
           if [ "${{ matrix.arch }}" == "linux-x86_64" ]; then
             SDE_DIR="$(basename "$SDE_LINUX_URL" | sed 's/.tar.xz//')"
-            SDE_PATH="${{ github.workspace }}/${SDE_DIR}/sde"
           elif [[ "${{ matrix.arch }}" == "windows-x86" || "${{ matrix.arch }}" == "windows-x64" ]]; then
             SDE_DIR="$(basename "$SDE_WINDOWS_URL" | sed 's/.tar.xz//')"
-            SDE_PATH="${{ github.workspace }}\\$SDE_DIR\\sde.exe"
           fi
+          SDE_PATH="${{ github.workspace }}/${SDE_DIR}/sde"
           echo "SDE_PATH=$SDE_PATH" >> $GITHUB_ENV && echo "SDE_PATH set to: $SDE_PATH"
         shell: bash
 
