@@ -65,12 +65,6 @@ jobs:
 
       - name: Run tests using Intel SDE
         run: |
-          echo "Running SDE Help"
-          if [ "${{ matrix.architecture }}" == "linux-x86_64" ]; then
-            "${{ env.SDE_PATH }}" --help  # Linux command
-          else
-            # Use the call operator & to run the executable in PowerShell
-            & "${{ env.SDE_PATH }}" --help  # Windows command
-          fi
+          "${{ env.SDE_PATH }}"
         #working-directory: ${{ github.workspace }}/build/${{ matrix.architecture }}
         #shell: bash
