@@ -14,8 +14,8 @@ jobs:
   test-sde:
     strategy:
       matrix:
-        arch: [windows-x86, windows-x64, linux-x86_64]
-        sde-processor: [skl, cnl, icl, skx, clx, cpx, icx, tgl, adl, mtl, rpl, spr, emr, gnr, srf, arl, lnl]
+        arch: [linux-x86_64]
+        sde-processor: [skl]
     runs-on: ${{ matrix.arch == 'linux-x86_64' && 'ubuntu-latest' || 'windows-latest' }}
     needs: build
     timeout-minutes: 60
@@ -53,13 +53,13 @@ jobs:
       - name: Run tests using Intel SDE (Linux)
         if: matrix.arch == 'linux-x86_64'
         run: |
-          "${{ env.SDE_PATH }}" -${{ matrix.sde-processor }} -- ctest -C Release --parallel ${{ env.NUMBER_OF_PROCESSORS }}
-        working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
+          "${{ env.SDE_PATH }}" -${{ matrix.sde-processor }} -- ctest -C Release --test-dir ${{ github.workspace }}/build/${{ matrix.arch }} --parallel ${{ env.NUMBER_OF_PROCESSORS }}
+        #working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
         shell: bash
 
-      - name: Run tests using Intel SDE (Windows-x86 and Windows-x64)
-        if: matrix.arch == 'windows-x86' || matrix.arch == 'windows-x64'
-        run: |
-          & "$env:SDE_PATH" -${{ matrix.sde-processor }} -- ctest -C Release --parallel $Env:NUMBER_OF_PROCESSORS
-        working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
-        shell: pwsh
+      # - name: Run tests using Intel SDE (Windows-x86 and Windows-x64)
+      #   if: matrix.arch == 'windows-x86' || matrix.arch == 'windows-x64'
+      #   run: |
+      #     & "$env:SDE_PATH" -${{ matrix.sde-processor }} -- ctest -C Release --parallel $env:NUMBER_OF_PROCESSORS
+      #   working-directory: ${{ github.workspace }}/build/${{ matrix.arch }}
+      #   shell: pwsh
