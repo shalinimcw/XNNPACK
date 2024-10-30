@@ -15,10 +15,9 @@ jobs:
     strategy:
       matrix:
         arch: [windows-x86, windows-x64, linux-x86_64]
-        sde-processor: [quark, p4, p4p, mrm, pnr, nhm, wsm, gnr256, future]
+        sde-processor: [quark, p4, p4p, mrm, pnr, nhm, wsm, slt, slm, glm, glp, tnt, snr]
     runs-on: ${{ matrix.arch == 'linux-x86_64' && 'ubuntu-latest' || 'windows-latest' }}
     needs: build
-    timeout-minutes: 60
     continue-on-error: true
 
     name: >
@@ -31,8 +30,12 @@ jobs:
         "pnr": {"main": "Penryn"},
         "nhm": {"main": "Nehalem"},
         "wsm": {"main": "Westmere"},
-        "gnr256": {"main": "Granite Rapids (AVX10.1 / 256VL)"},
-        "future": {"main": "Future chip"}
+        "slt": {"main": "Saltwell"},
+        "slm": {"main": "Silvermont"},
+        "glm": {"main": "Goldmont"},
+        "glp": {"main": "Goldmont Plus"},
+        "tnt": {"main": "Tremont"},
+        "snr": {"main": "Snow Ridge"}
           }')[matrix.sde-processor].main }}
 
     steps:
